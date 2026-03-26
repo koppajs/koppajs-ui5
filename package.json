@@ -1,0 +1,91 @@
+{
+  "name": "@koppajs/koppajs-ui5",
+  "version": "0.1.0",
+  "description": "Official KoppaJS adapter for UI5 Web Components with explicit runtime configuration and a lightweight bridge layer.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "package.json"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/koppajs/koppajs-ui5"
+  },
+  "keywords": [
+    "koppajs",
+    "koppajs-module",
+    "ui5",
+    "ui5-web-components",
+    "web-components",
+    "custom-elements",
+    "adapter",
+    "integration",
+    "component-library",
+    "frontend",
+    "typescript",
+    "fiori"
+  ],
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=10.24.0"
+  },
+  "packageManager": "pnpm@10.24.0",
+  "scripts": {
+    "generate:ui5-manifests": "node ./scripts/generate-ui5-package-manifests.mjs",
+    "typecheck": "tsc --project tsconfig.json --noEmit",
+    "typecheck:declarations": "tsc --project tsconfig.build.json",
+    "build": "pnpm run generate:ui5-manifests && pnpm run typecheck && vite build && pnpm run typecheck:declarations",
+    "dev:example": "vite --config ./examples/basic-koppajs-app/vite.config.mjs --host",
+    "lint": "eslint .",
+    "format": "prettier . --write --ignore-unknown",
+    "format:check": "prettier . --check --ignore-unknown",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "check": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run test",
+    "validate": "pnpm run build && pnpm run test:e2e"
+  },
+  "peerDependencies": {
+    "@koppajs/koppajs-core": "^3.0.2"
+  },
+  "dependencies": {
+    "@ui5/webcomponents": "2.20.2",
+    "@ui5/webcomponents-ai": "2.20.2",
+    "@ui5/webcomponents-base": "2.20.2",
+    "@ui5/webcomponents-compat": "2.20.2",
+    "@ui5/webcomponents-fiori": "2.20.2"
+  },
+  "devDependencies": {
+    "@koppajs/koppajs-core": "^3.0.2",
+    "@koppajs/koppajs-vite-plugin": "^1.0.0",
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^24.10.1",
+    "@vitest/coverage-v8": "^4.0.18",
+    "@eslint/js": "^9.39.1",
+    "@typescript-eslint/eslint-plugin": "^8.48.1",
+    "@typescript-eslint/parser": "^8.48.1",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.4.0",
+    "jsdom": "^27.2.0",
+    "prettier": "^3.7.3",
+    "typescript": "^5.7.2",
+    "vite": "^7.2.6",
+    "vitest": "^4.0.18"
+  }
+}
