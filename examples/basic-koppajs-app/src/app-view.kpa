@@ -1,0 +1,266 @@
+[template]
+  <div class="app-shell">
+    <ui5-shellbar
+      primary-title="KoppaJS UI5 Adapter"
+      secondary-title="Browser Fixture"
+      show-co-pilot
+    ></ui5-shellbar>
+
+    <main class="app-main">
+      <section class="surface">
+        <header class="section-header">
+          <p class="eyebrow">Primitive bindings</p>
+          <h1>Koppajs state drives the original <code>ui5-*</code> API.</h1>
+        </header>
+
+        <div class="control-grid">
+          <ui5-input
+            ref="emailInput"
+            accessible-name="Email"
+            placeholder="name@example.com"
+            :value="email"
+            onInput="handleEmailInput"
+          ></ui5-input>
+
+          <ui5-button
+            data-primary-save="true"
+            design="Emphasized"
+            :disabled="isSaving"
+            onClick="toggleSaving"
+          >
+            Toggle Saving
+          </ui5-button>
+
+          <ui5-button design="Transparent" onClick="triggerParentRerender">
+            Trigger Parent Rerender
+          </ui5-button>
+        </div>
+
+        <div class="status-grid">
+          <p>Email mirror: <span id="email-value">{{ email }}</span></p>
+          <p>Save button: <span id="saving-state">{{ isSaving ? "disabled" : "enabled" }}</span></p>
+          <p>Parent rerenders: <span id="rerender-count">{{ rerenderCount }}</span></p>
+        </div>
+      </section>
+
+      <section class="surface">
+        <header class="section-header">
+          <p class="eyebrow">Event bridge</p>
+          <h2>UI5 custom events stay declarative.</h2>
+        </header>
+
+        <div class="control-grid control-grid--stack">
+          <ui5-list
+            ref="selectionHost"
+            selection-mode="Single"
+            onUi5SelectionChange="handleSelectionChange"
+          >
+            <ui5-li selected>Home</ui5-li>
+            <ui5-li>Settings</ui5-li>
+          </ui5-list>
+
+          <ui5-button design="Transparent" onClick="emitSelectionChangeForTest">
+            Trigger selection-change
+          </ui5-button>
+
+          <p>
+            selection-change count:
+            <span id="selection-change-count">{{ selectionChangeCount }}</span>
+          </p>
+          <p>
+            last selected item:
+            <span id="last-selection">{{ lastSelection }}</span>
+          </p>
+
+          <ui5-date-picker
+            ref="datePicker"
+            accessible-name="Date"
+            value-state="Negative"
+            onUi5ValueStateChange="handleValueStateChange"
+          ></ui5-date-picker>
+
+          <ui5-button design="Transparent" onClick="emitValueStateChangeForTest">
+            Trigger value-state-change
+          </ui5-button>
+
+          <p>
+            value-state-change count:
+            <span id="value-state-change-count">{{ valueStateChangeCount }}</span>
+          </p>
+          <p>
+            last value-state payload:
+            <span id="last-value-state">{{ lastValueState }}</span>
+          </p>
+        </div>
+      </section>
+
+      <section class="surface">
+        <header class="section-header">
+          <p class="eyebrow">Fiori package</p>
+          <h2>Fiori components are available without wrappers.</h2>
+        </header>
+
+        <ui5-side-navigation class="fixture-nav">
+          <ui5-side-navigation-item text="Inbox" selected></ui5-side-navigation-item>
+          <ui5-side-navigation-item text="Archive"></ui5-side-navigation-item>
+        </ui5-side-navigation>
+      </section>
+    </main>
+  </div>
+[/template]
+
+[ts]
+  return {
+    state: {
+      email: "alice@example.com",
+      isSaving: false,
+      rerenderCount: 0,
+      selectionChangeCount: 0,
+      lastSelection: "none",
+      valueStateChangeCount: 0,
+      lastValueState: "none",
+    },
+    methods: {
+      handleEmailInput(event) {
+        this.email = event.target.value || "";
+      },
+      toggleSaving() {
+        this.isSaving = !this.isSaving;
+      },
+      triggerParentRerender() {
+        this.rerenderCount += 1;
+      },
+      handleSelectionChange(event) {
+        this.selectionChangeCount += 1;
+        const item = event.detail?.selectedItems?.[0];
+        this.lastSelection =
+          item?.text || item?.textContent?.trim() || "changed";
+      },
+      emitSelectionChangeForTest() {
+        const selectionHost = $refs.selectionHost;
+        const settingsItem = selectionHost?.querySelector?.("ui5-li:last-child");
+
+        selectionHost?.dispatchEvent(
+          new CustomEvent("selection-change", {
+            bubbles: true,
+            detail: {
+              selectedItems: settingsItem ? [settingsItem] : [],
+            },
+          }),
+        );
+      },
+      handleValueStateChange(event) {
+        this.valueStateChangeCount += 1;
+        this.lastValueState = `${event.detail?.valueState ?? "unknown"}:${event.detail?.valid ?? "unknown"}`;
+      },
+      emitValueStateChangeForTest() {
+        $refs.datePicker?.dispatchEvent(
+          new CustomEvent("value-state-change", {
+            bubbles: true,
+            detail: {
+              valueState: "Negative",
+              valid: false,
+            },
+          }),
+        );
+      },
+    },
+  };
+[/ts]
+
+[css]
+  :host {
+    display: block;
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at top right, rgba(75, 124, 255, 0.26), transparent 32rem),
+      linear-gradient(180deg, #09131e 0%, #0f1d2d 100%);
+    color: #f4f8fc;
+    font-family:
+      "Segoe UI",
+      "SF Pro Display",
+      sans-serif;
+  }
+
+  .app-shell {
+    min-height: 100vh;
+  }
+
+  .app-main {
+    display: grid;
+    gap: 1.5rem;
+    padding: 1.75rem;
+  }
+
+  .surface {
+    display: grid;
+    gap: 1rem;
+    padding: 1.5rem;
+    border: 1px solid rgba(148, 188, 255, 0.18);
+    border-radius: 1.5rem;
+    background: rgba(8, 20, 35, 0.76);
+    backdrop-filter: blur(14px);
+  }
+
+  .section-header {
+    display: grid;
+    gap: 0.25rem;
+  }
+
+  .section-header h1,
+  .section-header h2 {
+    margin: 0;
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
+    font-weight: 700;
+  }
+
+  .section-header code {
+    font-family: "SF Mono", monospace;
+    font-size: 0.9em;
+  }
+
+  .eyebrow {
+    margin: 0;
+    font-size: 0.78rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #8ac7ff;
+  }
+
+  .control-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    align-items: center;
+  }
+
+  .control-grid--stack {
+    grid-template-columns: 1fr;
+  }
+
+  .status-grid {
+    display: grid;
+    gap: 0.5rem;
+    color: rgba(244, 248, 252, 0.84);
+  }
+
+  .status-grid p,
+  .control-grid--stack p {
+    margin: 0;
+  }
+
+  .fixture-nav {
+    max-width: 20rem;
+  }
+
+  @media (max-width: 640px) {
+    .app-main {
+      padding: 1rem;
+    }
+
+    .surface {
+      padding: 1.1rem;
+      border-radius: 1.1rem;
+    }
+  }
+[/css]

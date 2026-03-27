@@ -1,0 +1,11 @@
+coverage/
+dist/
+node_modules/
+.husky/_/
+.DS_Store
+playwright-report/
+test-results/
+*.log
+*.tgz
+*.tsbuildinfo
+.tmp-ui5*/
