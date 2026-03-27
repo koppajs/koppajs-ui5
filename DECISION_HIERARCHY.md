@@ -1,18 +1,25 @@
 # Decision Hierarchy
 
-When repository artifacts disagree, resolve conflicts in this order:
+When project documents disagree, resolve the conflict in this order:
 
-1. Source code and exported TypeScript types in [`src/`](./src)
-2. Executable tests in [`tests/`](./tests)
-3. Feature specifications in [`docs/specs/`](./docs/specs)
-4. Architecture rules in [`ARCHITECTURE.md`](./ARCHITECTURE.md) and [`adr/`](./adr)
-5. Maintainer workflow documents such as [`DEVELOPMENT_RULES.md`](./DEVELOPMENT_RULES.md) and [`TESTING_STRATEGY.md`](./TESTING_STRATEGY.md)
-6. User-facing summary docs such as [`README.md`](./README.md) and [`CONTRIBUTING.md`](./CONTRIBUTING.md)
-7. Future intent in [`ROADMAP.md`](./ROADMAP.md)
+1. Approved specs in [`docs/specs/`](./docs/specs/)
+2. Accepted ADRs in [`docs/adr/`](./docs/adr/)
+3. [`AI_CONSTITUTION.md`](./AI_CONSTITUTION.md)
+4. [`ARCHITECTURE.md`](./ARCHITECTURE.md) and
+   [`docs/architecture/`](./docs/architecture/)
+5. [`DEVELOPMENT_RULES.md`](./DEVELOPMENT_RULES.md)
+6. [`TESTING_STRATEGY.md`](./TESTING_STRATEGY.md) and
+   [`docs/quality/`](./docs/quality/)
+7. [`docs/meta/`](./docs/meta/)
+8. [`CONTRIBUTING.md`](./CONTRIBUTING.md)
+9. [`RELEASE.md`](./RELEASE.md) for release and publish process details
+10. [`README.md`](./README.md) and examples
 
-## Resolution Rules
+## Conflict Resolution Notes
 
-- If code and tests agree but docs disagree, update the docs.
-- If docs describe a better contract than the implementation provides, either fix the implementation and tests or narrow the docs immediately.
-- Do not treat roadmap items as current behavior.
-- Record lasting architectural choices in ADRs when they affect future repository alignment.
+- Higher-priority documents may narrow or clarify lower-priority documents.
+- Lower-priority documents must not silently override higher-priority rules.
+- If a needed rule is missing, add it to the highest sensible layer instead of
+  repeating it across multiple files.
+- When a substantial change affects multiple layers, update all impacted files
+  in one change so the hierarchy remains coherent.

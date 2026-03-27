@@ -42,8 +42,21 @@
 - No hidden auto-registration magic outside the documented module install flow.
 - No generalized serialization layer for arbitrary JS-only UI5 properties.
 
+## Packaging And Distribution
+
+- `pnpm run build` regenerates the committed UI5 manifest map and emits the
+  publishable package into `dist/`.
+- `package.json` exports the root ESM, CommonJS, and declaration entrypoints
+  from `dist/`, plus `./package.json` for tooling interoperability.
+- `pnpm run check:package` validates that the packed payload matches the
+  declared manifest fields and does not leak source or local test artifacts.
+- `pnpm run test:package` installs the packed tarball into a clean temporary
+  consumer and imports the published contract.
+
 ## Supporting Material
 
-- Boundary detail: [`architecture/module-boundaries.md`](./architecture/module-boundaries.md)
-- Architecture decisions: [`adr/`](./adr)
+- Boundary detail: [`docs/architecture/module-boundaries.md`](./docs/architecture/module-boundaries.md)
+- Architecture decisions: [`docs/adr/`](./docs/adr)
+- Quality baseline: [`docs/quality/README.md`](./docs/quality/README.md)
+- Meta layer: [`docs/meta/README.md`](./docs/meta/README.md)
 - Feature specs: [`docs/specs/`](./docs/specs)

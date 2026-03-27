@@ -42,6 +42,12 @@ Before structural, workflow, or user-visible changes, read the local governance 
 - [DECISION_HIERARCHY.md](./DECISION_HIERARCHY.md)
 - [ARCHITECTURE.md](./ARCHITECTURE.md)
 - [DEVELOPMENT_RULES.md](./DEVELOPMENT_RULES.md)
+- [RELEASE.md](./RELEASE.md)
+- [docs/README.md](./docs/README.md)
+- [docs/architecture/README.md](./docs/architecture/README.md)
+- [docs/adr/README.md](./docs/adr/README.md)
+- [docs/quality/README.md](./docs/quality/README.md)
+- [docs/meta/README.md](./docs/meta/README.md)
 - [docs/specs/README.md](./docs/specs/README.md)
 - [docs/specs/repository-documentation-contract.md](./docs/specs/repository-documentation-contract.md)
 
@@ -98,6 +104,7 @@ Repository-specific focus for this project:
 
 - Do not add wrapper components or alternate tag aliases for UI5 controls.
 - Keep runtime configuration, package loading, and event bridging explicit and reviewable.
+- Run `pnpm run check:package` and `pnpm run test:package` whenever package metadata, exports, or publish payload rules move.
 
 <p align="right">(<a href="#contributing-top">back to top</a>)</p>
 
@@ -113,6 +120,7 @@ Expectations for changes in this repository:
 - prefer updating governing docs over leaving intent implicit
 - keep quality-gate commands passing before asking for review
 - do not silently change public behavior or contributor workflow
+- keep package metadata, packed payload, and release workflow docs in sync
 
 <p align="right">(<a href="#contributing-top">back to top</a>)</p>
 
@@ -129,6 +137,8 @@ feat: harden documentation contract validation
 ```
 
 Keep commit scope aligned with the actual repository change.
+
+The local `commit-msg` hook validates this convention through `commitlint`.
 
 <p align="right">(<a href="#contributing-top">back to top</a>)</p>
 
@@ -151,17 +161,21 @@ That means:
 
 ## Scripts
 
-| Command                 | Description                                                                           |
-| ----------------------- | ------------------------------------------------------------------------------------- |
-| `pnpm run check:docs`   | Validate README, CHANGELOG, CODE_OF_CONDUCT, CONTRIBUTING, and the local doc contract |
-| `pnpm run check`        | Run the main local quality gate                                                       |
-| `pnpm run validate`     | Run the repository validation flow                                                    |
-| `pnpm run build`        | Build the project output                                                              |
-| `pnpm run test`         | Run the test suite                                                                    |
-| `pnpm run lint`         | Run lint checks                                                                       |
-| `pnpm run format`       | Format repository files                                                               |
-| `pnpm run format:check` | Check formatting without rewriting files                                              |
+| Command                  | Description                                                                           |
+| ------------------------ | ------------------------------------------------------------------------------------- |
+| `pnpm run check:docs`    | Validate README, CHANGELOG, CODE_OF_CONDUCT, CONTRIBUTING, and the local doc contract |
+| `pnpm run test:ci`       | Run the Vitest-based repository tests                                                 |
+| `pnpm run build`         | Build the project output                                                              |
+| `pnpm run check:package` | Verify the packed publish payload and manifest entrypoints                            |
+| `pnpm run test:package`  | Install the packed tarball into a temporary consumer and import the package           |
+| `pnpm run test:e2e`      | Run the Playwright browser fixture                                                    |
+| `pnpm run lint`          | Run lint checks                                                                       |
+| `pnpm run format`        | Format repository files                                                               |
+| `pnpm run format:check`  | Check formatting without rewriting files                                              |
+| `pnpm run check`         | Run the main local quality gate                                                       |
+| `pnpm run validate`      | Run the full validation flow including browser verification                           |
 
+The local `pre-commit` hook runs `pnpm run check:docs` plus `lint-staged`.
 GitHub Actions mirrors `pnpm run check` and `pnpm run validate` on pushes and pull requests for `main` and `develop`.
 
 <p align="right">(<a href="#contributing-top">back to top</a>)</p>
@@ -170,9 +184,9 @@ GitHub Actions mirrors `pnpm run check` and `pnpm run validate` on pushes and pu
 
 ## Releasing
 
-Repository release expectations stay documented in `CHANGELOG.md` and supporting governance files.
+This repository uses the documented release-branch and tag flow in [RELEASE.md](./RELEASE.md).
 
-When a release changes the public contract, update `CHANGELOG.md`, the relevant specs, and the governed root documents together.
+When a release or packaging rule changes, update `RELEASE.md`, `.github/workflows/`, `CHANGELOG.md`, and the affected quality/meta docs together.
 
 <p align="right">(<a href="#contributing-top">back to top</a>)</p>
 

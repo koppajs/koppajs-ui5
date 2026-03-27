@@ -5,8 +5,7 @@ node_modules/
 .DS_Store
 playwright-report/
 test-results/
-.tmp-ui5/
-.tmp-ui5-ai/
-.tmp-ui5-compat/
-.tmp-ui5-fiori/
-.tmp-ui5-main/
+*.log
+*.tgz
+*.tsbuildinfo
+.tmp-ui5*/

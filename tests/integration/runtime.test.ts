@@ -3,6 +3,7 @@ import { getLanguage } from "@ui5/webcomponents-base/dist/config/Language.js";
 import { resetConfiguration } from "@ui5/webcomponents-base/dist/config/ConfigurationReset.js";
 import { getTheme } from "@ui5/webcomponents-base/dist/config/Theme.js";
 
+import { observeUi5CustomEventAttributes } from "../../src/bridge/ui5-events";
 import { resolveKoppajsUi5Config } from "../../src/config";
 import {
   ensureKoppajsUi5RuntimeReady,
@@ -14,6 +15,11 @@ const createCtx = () => ({
   registerHook: vi.fn(),
   take: vi.fn(),
 });
+
+const flushBridgeObservers = async () => {
+  await Promise.resolve();
+  await new Promise((resolve) => setTimeout(resolve, 0));
+};
 
 const resetDocumentRuntimeHints = () => {
   document.documentElement.lang = "";
@@ -95,6 +101,71 @@ describe("Koppajs UI5 runtime", () => {
 
     expect(selectionHandler).toHaveBeenCalledTimes(1);
     expect(valueStateHandler).toHaveBeenCalledTimes(1);
+  });
+
+  it("removes stale declarative bridge listeners when handler attributes change", async () => {
+    registerKoppajsUi5Runtime(
+      createCtx(),
+      resolveKoppajsUi5Config({
+        packages: ["main"],
+      }),
+    );
+
+    await ensureKoppajsUi5RuntimeReady();
+
+    const host = document.createElement("div") as HTMLElement & {
+      instance?: {
+        methods?: Record<string, unknown>;
+      };
+    };
+    const segmentedButton = document.createElement("ui5-segmented-button");
+    const firstHandler = vi.fn();
+    const secondHandler = vi.fn();
+
+    host.instance = {
+      methods: {
+        handleSelection: firstHandler,
+        handleSelectionNext: secondHandler,
+      },
+    };
+    segmentedButton.setAttribute("onui5selectionchange", "handleSelection");
+    host.append(segmentedButton);
+    document.body.append(host);
+
+    observeUi5CustomEventAttributes(host);
+    await flushBridgeObservers();
+
+    segmentedButton.dispatchEvent(
+      new CustomEvent("selection-change", { bubbles: true }),
+    );
+    expect(firstHandler).toHaveBeenCalledTimes(1);
+
+    segmentedButton.setAttribute("onui5selectionchange", "");
+    await flushBridgeObservers();
+
+    segmentedButton.dispatchEvent(
+      new CustomEvent("selection-change", { bubbles: true }),
+    );
+    expect(firstHandler).toHaveBeenCalledTimes(1);
+
+    segmentedButton.setAttribute("onui5selectionchange", "handleSelectionNext");
+    await flushBridgeObservers();
+
+    segmentedButton.dispatchEvent(
+      new CustomEvent("selection-change", { bubbles: true }),
+    );
+    expect(firstHandler).toHaveBeenCalledTimes(1);
+    expect(secondHandler).toHaveBeenCalledTimes(1);
+
+    segmentedButton.setAttribute("onui5selectionchange", "missingHandler");
+    await flushBridgeObservers();
+
+    segmentedButton.dispatchEvent(
+      new CustomEvent("selection-change", { bubbles: true }),
+    );
+    expect(secondHandler).toHaveBeenCalledTimes(1);
+
+    host.remove();
   });
 
   it("warns once for unsupported JS-only bindings on UI5 elements", async () => {

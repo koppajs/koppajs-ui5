@@ -20,6 +20,7 @@ The repository validates behavior at three levels:
 - Config defaults or normalization changes: unit tests and any affected integration tests.
 - Runtime registration, package loading, or bridge changes: integration tests.
 - Example application, browser behavior, or rerender stability changes: Playwright coverage.
+- Package metadata, exports, or publish-payload changes: `pnpm run build`, `pnpm run check:package`, and `pnpm run test:package`.
 - Tooling-only changes: validate with the affected scripts; add tests only if tooling behavior becomes part of the contract.
 
 ## Standard Validation Commands
@@ -27,6 +28,10 @@ The repository validates behavior at three levels:
 - `pnpm run format:check`
 - `pnpm run lint`
 - `pnpm run typecheck`
-- `pnpm run test`
-- `pnpm run test:e2e`
+- `pnpm run test:ci`
 - `pnpm run build`
+- `pnpm run check:package`
+- `pnpm run test:package`
+- `pnpm run test:e2e`
+- `pnpm run check`
+- `pnpm run validate`

@@ -2,63 +2,64 @@ name: CI
 
 on:
   push:
-    branches:
-      - main
-      - develop
+    branches: [develop, main]
   pull_request:
-    branches:
-      - main
-      - develop
+    branches: [develop, main]
 
 jobs:
-  quality:
+  quality-gate:
+    name: Quality Gate (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20, 22]
+    env:
+      HUSKY: 0
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
+      - name: Checkout
+        uses: actions/checkout@v6
 
-      - name: Set up pnpm
+      - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 10.24.0
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v5
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: ${{ matrix.node-version }}
           cache: pnpm
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run repository quality gate
+      - name: Run package and repository checks
         run: pnpm run check
 
   validate:
+    name: Browser Validation
     runs-on: ubuntu-latest
-    needs: quality
+    needs: quality-gate
+    env:
+      HUSKY: 0
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
+      - name: Checkout
+        uses: actions/checkout@v6
 
-      - name: Set up pnpm
+      - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 10.24.0
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v5
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 22
           cache: pnpm
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Install Playwright browser dependencies
+      - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps chromium
 
-      - name: Run release validation gate
+      - name: Run browser validation gate
         run: pnpm run validate

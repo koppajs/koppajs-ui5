@@ -14,6 +14,7 @@ It is an integration package, not a wrapper library and not a UI component fork.
 - Treat the browser runtime as the supported target in `v0`. Do not claim SSR support without implementation, specs, and tests.
 - Use committed generated artifacts for UI5 package loading. Generation must be reproducible and should not introduce timestamp-only diffs.
 - Update documentation, specs, and tests in the same change whenever public behavior or documented constraints move.
+- Update `RELEASE.md`, `docs/quality/README.md`, and `docs/meta/` in the same change whenever package metadata, publish payload, or repository workflow rules move.
 - Respect existing boundaries: `config` resolves inputs, `module` exposes the adapter contract, `runtime` applies shared state, `packages` loads UI5 packages, and `bridge/*` handles integration edges.
 
 ## Non-Goals

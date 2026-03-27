@@ -115,8 +115,16 @@ const bindUi5AttributeListenersForElement = (
   }
 
   for (const attributeName of activeAttributeNames) {
+    const existingBinding = bindings.get(attributeName);
     const handlerName = element.getAttribute(attributeName)?.trim();
     if (!handlerName) {
+      if (existingBinding) {
+        element.removeEventListener(
+          existingBinding.eventType,
+          existingBinding.handler,
+        );
+        bindings.delete(attributeName);
+      }
       continue;
     }
 
@@ -127,10 +135,16 @@ const bindUi5AttributeListenersForElement = (
     const handler = getComponentEventHandler(host, handlerName);
 
     if (!actualEventType || !handler) {
+      if (existingBinding) {
+        element.removeEventListener(
+          existingBinding.eventType,
+          existingBinding.handler,
+        );
+        bindings.delete(attributeName);
+      }
       continue;
     }
 
-    const existingBinding = bindings.get(attributeName);
     if (
       existingBinding &&
       existingBinding.eventType === actualEventType &&
@@ -155,6 +169,8 @@ const bindUi5AttributeListenersForElement = (
 
   if (bindings.size > 0) {
     boundUi5AttributeListeners.set(element, bindings);
+  } else {
+    boundUi5AttributeListeners.delete(element);
   }
 };
 

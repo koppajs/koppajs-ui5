@@ -32,7 +32,8 @@ Translate explicit `onUi5...` listener aliases into the actual kebab-case UI5 cu
 ## edge_cases
 
 - Unknown alias names warn once per element tag and alias pair.
-- Empty handler attribute values are ignored.
+- Empty handler attribute values remove any previously attached listener for the same alias.
+- Handler names that no longer resolve on the host instance remove any previously attached listener for the same alias.
 - Existing bindings are replaced only when the resolved event type or handler changes.
 - Detached hosts do not bind listeners until connected.
 
@@ -40,6 +41,7 @@ Translate explicit `onUi5...` listener aliases into the actual kebab-case UI5 cu
 
 - Known aliases such as `selection-change` and `value-state-change` resolve correctly.
 - Declarative `onUi5...` bindings survive host rerender cycles.
+- Clearing or invalidating a declarative `onUi5...` handler removes the stale listener.
 - Disabling the bridge prevents alias resolution without affecting native events.
 
 ## evolution_phase
@@ -61,4 +63,4 @@ Implemented and covered by integration and end-to-end tests for representative U
 
 ## technical_debt_items
 
-- Add focused coverage for attribute rebinding across more mutation patterns if the adapter starts seeing regressions in real applications.
+- Extend attribute rebinding coverage beyond clear-and-replace cycles if the adapter starts seeing regressions in more complex rerender patterns.

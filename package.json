@@ -19,7 +19,8 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "sideEffects": false,
   "repository": {
@@ -46,21 +47,31 @@
   },
   "packageManager": "pnpm@10.24.0",
   "scripts": {
+    "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
     "generate:ui5-manifests": "node ./scripts/generate-ui5-package-manifests.mjs",
     "typecheck": "tsc --project tsconfig.json --noEmit",
     "typecheck:declarations": "tsc --project tsconfig.build.json",
-    "build": "pnpm run generate:ui5-manifests && pnpm run typecheck && vite build && pnpm run typecheck:declarations",
+    "build": "pnpm run clean && pnpm run generate:ui5-manifests && pnpm run typecheck && vite build && pnpm run typecheck:declarations",
     "dev:example": "vite --config ./examples/basic-koppajs-app/vite.config.mjs --host",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings=0",
+    "lint:fix": "pnpm run lint -- --fix && pnpm run format",
+    "lint:staged": "lint-staged --config lint-staged.config.mjs",
     "format": "prettier . --write --ignore-unknown",
     "format:check": "prettier . --check --ignore-unknown",
-    "test": "vitest run",
-    "test:watch": "vitest",
+    "test:unit": "vitest run",
+    "test:unit:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:ci": "pnpm run test:unit",
     "test:e2e": "playwright test",
-    "check": "pnpm run check:docs && pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run test",
-    "validate": "pnpm run check:docs && pnpm run build && pnpm run test:e2e",
+    "check:package": "node ./scripts/check-package.mjs",
+    "check:release-tag": "node ./scripts/check-release-tag.mjs",
+    "test:package": "node ./scripts/test-package-consumer.mjs",
+    "test": "pnpm run test:ci",
+    "test:watch": "pnpm run test:unit:watch",
+    "check": "pnpm run check:docs && pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run test:ci && pnpm run build && pnpm run check:package && pnpm run test:package",
+    "validate": "pnpm run check && pnpm run test:e2e",
     "check:docs": "node scripts/check-doc-contract.mjs",
-    "prepare": "husky"
+    "prepare": "node -e \"const fs=require('node:fs'); const cp=require('node:child_process'); if(process.env.HUSKY==='0'){ console.log('Skipping husky install (HUSKY=0).'); process.exit(0); } if(!fs.existsSync('.git')){ console.log('Skipping husky install (no .git directory found).'); process.exit(0); } cp.execSync('pnpm exec husky',{stdio:'inherit'});\""
   },
   "peerDependencies": {
     "@koppajs/koppajs-core": "^3.0.2"
@@ -73,6 +84,8 @@
     "@ui5/webcomponents-fiori": "2.20.2"
   },
   "devDependencies": {
+    "@commitlint/cli": "^20.1.0",
+    "@commitlint/config-conventional": "^20.0.0",
     "@koppajs/koppajs-core": "^3.0.2",
     "@koppajs/koppajs-vite-plugin": "^1.0.0",
     "@playwright/test": "^1.58.2",
@@ -89,7 +102,8 @@
     "typescript": "^5.7.2",
     "vite": "^7.2.6",
     "vitest": "^4.0.18",
-    "husky": "^9.1.7"
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0"
   },
   "private": false
 }

@@ -18,6 +18,9 @@ This section tracks changes merged after the latest tag.
 
 ## [0.1.0] - 2026-03-27
 
+- aligned repository structure with the current KoppaJS package standard under `docs/{adr,architecture,meta,quality,specs}`
+- added package payload validation, tarball consumer smoke testing, release workflow automation with tag/changelog/main guards, and commit-time quality hooks
+- fixed declarative UI5 event bridge rebinding so cleared or invalidated `onUi5...` handlers no longer keep stale listeners
 - initial `@koppajs/koppajs-ui5` release
 - added public config API with `resolveKoppajsUi5Config`, `createKoppajsUi5Module`, and `installKoppajsUi5`
 - added official package loading for UI5 `main`, `fiori`, `compatibility`, and `ai`

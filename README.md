@@ -51,6 +51,7 @@
     <li><a href="#usage">Usage</a></li>
     <li><a href="#runtime-defaults">Runtime Defaults</a></li>
     <li><a href="#behavior-and-constraints">Behavior And Constraints</a></li>
+    <li><a href="#build-and-distribution">Build And Distribution</a></li>
     <li><a href="#ecosystem-fit">Ecosystem Fit</a></li>
     <li><a href="#quality-baseline">Quality Baseline</a></li>
     <li><a href="#additional-references">Additional References</a></li>
@@ -97,7 +98,8 @@ Internal files under `src/bridge/`, `src/runtime.ts`, `src/packages.ts`, and `sr
 - Repo type: adapter package
 - Runtime responsibility: browser runtime registration and UI5 bridge behavior
 - Build-time responsibility: deterministic generation of committed UI5 package manifests plus library bundling
-- Maturity: `v0` stabilization
+- UI surface: example fixture only, not part of the published contract
+- Maturity level: `v0` stabilization
 
 ---
 
@@ -114,6 +116,11 @@ The adapter currently supports these official UI5 packages:
 - `fiori` -> `@ui5/webcomponents-fiori`
 - `compatibility` -> `@ui5/webcomponents-compat`
 - `ai` -> `@ui5/webcomponents-ai`
+
+Local repository requirements:
+
+- Node.js >= 20
+- pnpm >= 10.24.0
 
 ---
 
@@ -284,6 +291,31 @@ Imperative escape hatch:
 
 ---
 
+## Build And Distribution
+
+- source lives in `src/`
+- `pnpm run build` regenerates committed UI5 package manifests, emits library bundles, and writes declarations to `dist/`
+- the published manifest exports `dist/index.js`, `dist/index.cjs`, and `dist/index.d.ts`
+- `pnpm run check:package` verifies that `files`, `exports`, and the packed payload stay aligned
+- `pnpm run test:package` installs the packed tarball into a clean temporary consumer and imports the published contract
+
+Local verification commands:
+
+```bash
+pnpm install
+pnpm run typecheck
+pnpm run lint
+pnpm run test:ci
+pnpm run build
+pnpm run check:package
+pnpm run test:package
+pnpm run test:e2e
+pnpm run check
+pnpm run validate
+```
+
+---
+
 ## Ecosystem Fit
 
 `@koppajs/koppajs-ui5` is not a replacement for `@koppajs/koppajs-components`.
@@ -297,23 +329,20 @@ The package is intentionally small so upstream UI5 documentation remains useful 
 
 ## Quality Baseline
 
-Primary repository commands:
-
-- `pnpm run format:check`
-- `pnpm run lint`
-- `pnpm run typecheck`
-- `pnpm run test`
-- `pnpm run test:e2e`
-- `pnpm run build`
+- `pnpm run check` is the main local quality gate for docs, formatting, linting, type safety, tests, build output, and publish payload validation.
+- `.github/workflows/ci.yml` mirrors that gate on Node 20 and 22.
+- `pnpm run validate` adds browser verification through Playwright.
+- `.github/workflows/release.yml` reruns `pnpm run validate` before GitHub release creation and npm publish.
 
 ---
 
 ## Additional References
 
-- Architecture boundaries: [`architecture/module-boundaries.md`](./architecture/module-boundaries.md)
-- ADRs: [`adr/`](./adr)
+- Architecture boundaries: [`docs/architecture/module-boundaries.md`](./docs/architecture/module-boundaries.md)
+- ADRs: [`docs/adr/README.md`](./docs/adr/README.md)
+- Quality baseline: [`docs/quality/README.md`](./docs/quality/README.md)
+- Meta layer: [`docs/meta/README.md`](./docs/meta/README.md)
 - Feature specs: [`docs/specs/`](./docs/specs)
-- Quality baseline: [`quality/README.md`](./quality/README.md)
 
 ---
 
@@ -326,10 +355,16 @@ Project intent, contributor rules, and documentation contracts live in the local
 - [DECISION_HIERARCHY.md](./DECISION_HIERARCHY.md)
 - [DEVELOPMENT_RULES.md](./DEVELOPMENT_RULES.md)
 - [TESTING_STRATEGY.md](./TESTING_STRATEGY.md)
+- [RELEASE.md](./RELEASE.md)
 - [ROADMAP.md](./ROADMAP.md)
 - [CHANGELOG.md](./CHANGELOG.md)
 - [CONTRIBUTING.md](./CONTRIBUTING.md)
 - [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
+- [docs/README.md](./docs/README.md)
+- [docs/architecture/README.md](./docs/architecture/README.md)
+- [docs/adr/README.md](./docs/adr/README.md)
+- [docs/quality/README.md](./docs/quality/README.md)
+- [docs/meta/README.md](./docs/meta/README.md)
 - [docs/specs/README.md](./docs/specs/README.md)
 - [docs/specs/repository-documentation-contract.md](./docs/specs/repository-documentation-contract.md)
 
