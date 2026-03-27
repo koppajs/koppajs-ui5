@@ -28,3 +28,9 @@
 - Run `pnpm run test` for behavior changes.
 - Run `pnpm run test:e2e` when the example fixture, runtime integration, or event bridge behavior changes.
 - Run `pnpm run build` before release-oriented changes are considered complete.
+
+## Documentation Contract Rules
+
+- `README.md`, `CHANGELOG.md`, `CODE_OF_CONDUCT.md`, and `CONTRIBUTING.md` are governed by [docs/specs/repository-documentation-contract.md](./docs/specs/repository-documentation-contract.md).
+- If one of those files changes shape, update the spec and `scripts/check-doc-contract.mjs` in the same change.
+- Keep official KoppaJS branding, logo usage, and closing governance sections consistent across the governed root documents.

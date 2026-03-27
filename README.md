@@ -1,7 +1,66 @@
-# @koppajs/koppajs-ui5
+<a id="readme-top"></a>
 
-`@koppajs/koppajs-ui5` is the official KoppaJS adapter for [UI5 Web Components](https://ui5.github.io/webcomponents/).
-It keeps native `ui5-*` tags intact, loads the selected official UI5 packages, applies shared runtime configuration, and bridges explicit `onUi5...` custom-event bindings.
+<div align="center">
+  <img src="https://public-assets-1b57ca06-687a-4142-a525-0635f7649a5c.s3.eu-central-1.amazonaws.com/koppajs/koppajs-logo-text-900x226.png" width="500" alt="KoppaJS Logo">
+</div>
+
+<br>
+
+<div align="center">
+  <a href="https://www.npmjs.com/package/@koppajs/koppajs-ui5"><img src="https://img.shields.io/npm/v/@koppajs/koppajs-ui5?style=flat-square" alt="npm version"></a>
+  <a href="https://github.com/koppajs/koppajs-ui5/actions"><img src="https://img.shields.io/github/actions/workflow/status/koppajs/koppajs-ui5/ci.yml?branch=main&style=flat-square" alt="CI Status"></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue?style=flat-square" alt="License"></a>
+</div>
+
+<br>
+
+<div align="center">
+  <h1 align="center">@koppajs/koppajs-ui5</h1>
+  <h3 align="center">Official KoppaJS adapter for UI5 Web Components</h3>
+  <p align="center">
+    <i>Keep native `ui5-*` tags, load official UI5 packages, and bridge explicit custom events without wrapper sprawl.</i>
+  </p>
+</div>
+
+<br>
+
+<div align="center">
+  <p align="center">
+    <a href="https://github.com/koppajs/koppajs-documentation">Documentation</a>
+    &middot;
+    <a href="https://github.com/koppajs/koppajs-core">KoppaJS Core</a>
+    &middot;
+    <a href="https://github.com/koppajs/koppajs-vite-plugin">Vite Plugin</a>
+    &middot;
+    <a href="https://github.com/koppajs/koppajs-components">Components</a>
+    &middot;
+    <a href="https://github.com/koppajs/koppajs-ui5/issues">Issues</a>
+  </p>
+</div>
+
+<br>
+
+<details>
+<summary>Table of Contents</summary>
+  <ol>
+    <li><a href="#purpose">Purpose</a></li>
+    <li><a href="#ownership-boundaries">Ownership Boundaries</a></li>
+    <li><a href="#repository-classification">Repository Classification</a></li>
+    <li><a href="#installation">Installation</a></li>
+    <li><a href="#public-contract">Public Contract</a></li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#runtime-defaults">Runtime Defaults</a></li>
+    <li><a href="#behavior-and-constraints">Behavior And Constraints</a></li>
+    <li><a href="#ecosystem-fit">Ecosystem Fit</a></li>
+    <li><a href="#quality-baseline">Quality Baseline</a></li>
+    <li><a href="#additional-references">Additional References</a></li>
+    <li><a href="#architecture-governance">Architecture & Governance</a></li>
+    <li><a href="#community-contribution">Community & Contribution</a></li>
+    <li><a href="#license">License</a></li>
+  </ol>
+</details>
+
+---
 
 ## Purpose
 
@@ -21,6 +80,8 @@ It does not own:
 - A fork of UI5 Web Components
 - Generic declarative support for arbitrary JS-only UI5 property shapes
 
+---
+
 ## Ownership Boundaries
 
 - Supported public entry point: the root package export only
@@ -29,12 +90,16 @@ It does not own:
 
 Internal files under `src/bridge/`, `src/runtime.ts`, `src/packages.ts`, and `src/generated/` are implementation details.
 
+---
+
 ## Repository Classification
 
 - Repo type: adapter package
 - Runtime responsibility: browser runtime registration and UI5 bridge behavior
 - Build-time responsibility: deterministic generation of committed UI5 package manifests plus library bundling
 - Maturity: `v0` stabilization
+
+---
 
 ## Installation
 
@@ -49,6 +114,8 @@ The adapter currently supports these official UI5 packages:
 - `fiori` -> `@ui5/webcomponents-fiori`
 - `compatibility` -> `@ui5/webcomponents-compat`
 - `ai` -> `@ui5/webcomponents-ai`
+
+---
 
 ## Public Contract
 
@@ -110,6 +177,8 @@ export function installKoppajsUi5(input?: KoppajsUi5ConfigInput): void;
 Only the root export is part of the supported contract.
 Imports from internal source files are outside the package boundary.
 
+---
+
 ## Usage
 
 Canonical registration:
@@ -157,6 +226,8 @@ Template usage stays on the original `ui5-*` API:
 [/template]
 ```
 
+---
+
 ## Runtime Defaults
 
 - `packages`: `["main", "fiori"]`
@@ -166,6 +237,8 @@ Template usage stays on the original `ui5-*` API:
 - `runtime.contentDensity`: `"cozy"`
 - `bridge.ui5CustomEvents`: `true`
 - `bridge.warnOnUnsupportedBindings`: `true`
+
+---
 
 ## Behavior And Constraints
 
@@ -209,6 +282,8 @@ Imperative escape hatch:
 [/ts]
 ```
 
+---
+
 ## Ecosystem Fit
 
 `@koppajs/koppajs-ui5` is not a replacement for `@koppajs/koppajs-components`.
@@ -217,6 +292,8 @@ Imperative escape hatch:
 - `@koppajs/koppajs-ui5` is an integration adapter for the original UI5 Web Components ecosystem.
 
 The package is intentionally small so upstream UI5 documentation remains useful and the adapter contract stays reviewable.
+
+---
 
 ## Quality Baseline
 
@@ -229,18 +306,7 @@ Primary repository commands:
 - `pnpm run test:e2e`
 - `pnpm run build`
 
-## Governance
-
-Repository doctrine and maintenance rules live in:
-
-- [`AI_CONSTITUTION.md`](./AI_CONSTITUTION.md)
-- [`ARCHITECTURE.md`](./ARCHITECTURE.md)
-- [`DEVELOPMENT_RULES.md`](./DEVELOPMENT_RULES.md)
-- [`TESTING_STRATEGY.md`](./TESTING_STRATEGY.md)
-- [`DECISION_HIERARCHY.md`](./DECISION_HIERARCHY.md)
-- [`CONTRIBUTING.md`](./CONTRIBUTING.md)
-- [`ROADMAP.md`](./ROADMAP.md)
-- [`docs/`](./docs)
+---
 
 ## Additional References
 
@@ -248,3 +314,47 @@ Repository doctrine and maintenance rules live in:
 - ADRs: [`adr/`](./adr)
 - Feature specs: [`docs/specs/`](./docs/specs)
 - Quality baseline: [`quality/README.md`](./quality/README.md)
+
+---
+
+## Architecture & Governance
+
+Project intent, contributor rules, and documentation contracts live in the local repo meta layer:
+
+- [AI_CONSTITUTION.md](./AI_CONSTITUTION.md)
+- [ARCHITECTURE.md](./ARCHITECTURE.md)
+- [DECISION_HIERARCHY.md](./DECISION_HIERARCHY.md)
+- [DEVELOPMENT_RULES.md](./DEVELOPMENT_RULES.md)
+- [TESTING_STRATEGY.md](./TESTING_STRATEGY.md)
+- [ROADMAP.md](./ROADMAP.md)
+- [CHANGELOG.md](./CHANGELOG.md)
+- [CONTRIBUTING.md](./CONTRIBUTING.md)
+- [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
+- [docs/specs/README.md](./docs/specs/README.md)
+- [docs/specs/repository-documentation-contract.md](./docs/specs/repository-documentation-contract.md)
+
+The file-shape contract for `README.md`, `CHANGELOG.md`, `CODE_OF_CONDUCT.md`, and `CONTRIBUTING.md` is defined in [docs/specs/repository-documentation-contract.md](./docs/specs/repository-documentation-contract.md).
+
+Run the local document guard before committing:
+
+```bash
+pnpm run check:docs
+```
+
+---
+
+## Community & Contribution
+
+Issues and pull requests are welcome:
+
+https://github.com/koppajs/koppajs-ui5/issues
+
+Contributor workflow details live in [CONTRIBUTING.md](./CONTRIBUTING.md).
+
+Community expectations live in [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md).
+
+---
+
+## License
+
+Apache License 2.0 — © 2026 KoppaJS, Bastian Bensch

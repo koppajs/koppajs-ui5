@@ -57,8 +57,10 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "check": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run test",
-    "validate": "pnpm run build && pnpm run test:e2e"
+    "check": "pnpm run check:docs && pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run test",
+    "validate": "pnpm run check:docs && pnpm run build && pnpm run test:e2e",
+    "check:docs": "node scripts/check-doc-contract.mjs",
+    "prepare": "husky"
   },
   "peerDependencies": {
     "@koppajs/koppajs-core": "^3.0.2"
@@ -86,6 +88,8 @@
     "prettier": "^3.7.3",
     "typescript": "^5.7.2",
     "vite": "^7.2.6",
-    "vitest": "^4.0.18"
-  }
+    "vitest": "^4.0.18",
+    "husky": "^9.1.7"
+  },
+  "private": false
 }
