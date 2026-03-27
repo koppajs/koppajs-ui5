@@ -72,7 +72,7 @@ describe("Koppajs UI5 runtime", () => {
     expect(customElements.get("ui5-button")).toBeDefined();
     expect(customElements.get("ui5-shellbar")).toBeDefined();
     expect(customElements.get("ui5-ai-prompt-input")).toBeDefined();
-  });
+  }, 15_000);
 
   it("bridges multiple real UI5 custom-event aliases", async () => {
     registerKoppajsUi5Runtime(

@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [20, 22]
+        node-version: [22, 24]
     env:
       HUSKY: 0
 
@@ -36,9 +36,12 @@ jobs:
         run: pnpm run check
 
   validate:
-    name: Browser Validation
+    name: Browser Validation (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
     needs: quality-gate
+    strategy:
+      matrix:
+        node-version: [22, 24]
     env:
       HUSKY: 0
 
@@ -49,10 +52,10 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
 
-      - name: Setup Node.js 22
+      - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: ${{ matrix.node-version }}
           cache: pnpm
 
       - name: Install dependencies
@@ -62,4 +65,4 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
 
       - name: Run browser validation gate
-        run: pnpm run validate
+        run: pnpm run test:e2e

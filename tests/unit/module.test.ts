@@ -1,12 +1,17 @@
 import { describe, expect, it, vi } from "vitest";
 
+const { registerKoppajsUi5Runtime } = vi.hoisted(() => ({
+  registerKoppajsUi5Runtime: vi.fn(),
+}));
+
+vi.mock("../../src/runtime", () => ({
+  registerKoppajsUi5Runtime,
+}));
+
 import { createKoppajsUi5Module } from "../../src/module";
-import { resetKoppajsUi5RuntimeForTests } from "../../src/runtime";
 
 describe("createKoppajsUi5Module", () => {
   it("creates a Core-compatible module registration", () => {
-    resetKoppajsUi5RuntimeForTests();
-
     const registerHook = vi.fn();
     const take = vi.fn();
     const module = createKoppajsUi5Module({
@@ -18,6 +23,9 @@ describe("createKoppajsUi5Module", () => {
 
     module.install({ registerHook, take });
 
-    expect(registerHook).toHaveBeenCalledWith("created", expect.any(Function));
+    expect(registerKoppajsUi5Runtime).toHaveBeenCalledWith(
+      { registerHook, take },
+      module.config,
+    );
   });
 });

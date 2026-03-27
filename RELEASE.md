@@ -58,8 +58,12 @@ Before cutting a release, ensure all of the following are true:
 
 Tooling expectations for local verification:
 
-- Node.js 20 or newer
+- Node.js 22 or newer
 - pnpm 10.24.0 or newer
+
+Maintainer default:
+
+- `.nvmrc` pins Node.js 22 for the release workflow and local release preparation
 
 The release workflow requires:
 
@@ -84,6 +88,7 @@ pnpm run validate
 Why this matters:
 
 - the release workflow runs the same validation gates again in CI
+- the release workflow resolves its Node.js version from `.nvmrc`
 - failing locally is cheaper than failing after tagging
 - `pnpm run build` verifies the publishable package output
 - `pnpm run check:package` verifies that manifest entrypoints, exports, and the

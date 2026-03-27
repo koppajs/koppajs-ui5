@@ -75,7 +75,7 @@ The local pre-commit hook runs the same guard and blocks the commit when the con
 
 ## Requirements
 
-- Node.js >= 20
+- Node.js >= 22
 - pnpm >= 10.24.0
 
 Install dependencies:
@@ -164,7 +164,7 @@ That means:
 | Command                  | Description                                                                           |
 | ------------------------ | ------------------------------------------------------------------------------------- |
 | `pnpm run check:docs`    | Validate README, CHANGELOG, CODE_OF_CONDUCT, CONTRIBUTING, and the local doc contract |
-| `pnpm run test:ci`       | Run the Vitest-based repository tests                                                 |
+| `pnpm run test:ci`       | Run the Vitest-based repository tests with coverage                                   |
 | `pnpm run build`         | Build the project output                                                              |
 | `pnpm run check:package` | Verify the packed publish payload and manifest entrypoints                            |
 | `pnpm run test:package`  | Install the packed tarball into a temporary consumer and import the package           |
@@ -176,7 +176,7 @@ That means:
 | `pnpm run validate`      | Run the full validation flow including browser verification                           |
 
 The local `pre-commit` hook runs `pnpm run check:docs` plus `lint-staged`.
-GitHub Actions mirrors `pnpm run check` and `pnpm run validate` on pushes and pull requests for `main` and `develop`.
+GitHub Actions runs `pnpm run check` plus `pnpm run test:e2e` on pushes and pull requests for `main` and `develop`.
 
 <p align="right">(<a href="#contributing-top">back to top</a>)</p>
 
