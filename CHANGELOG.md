@@ -14,6 +14,8 @@ not every internal refactor.
 
 This section tracks changes merged after the latest tag.
 
+- raised the repository minimum to Node.js >= 22, added `.nvmrc` for the maintainer default on Node 22, aligned `test:ci` with coverage, and expanded CI validation to Node 22 and 24
+
 ---
 
 ## [0.1.0] - 2026-03-27

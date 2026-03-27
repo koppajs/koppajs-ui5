@@ -5,9 +5,11 @@ This directory captures the repository's practical quality gates.
 ## Verification Matrix
 
 - Script-based checks remain the authoritative local quality gate.
-- `.github/workflows/ci.yml` mirrors `pnpm run check` on Node 20 and 22.
+- `.github/workflows/ci.yml` runs `pnpm run check` on Node 22 and 24, then runs
+  `pnpm run test:e2e` on the same matrix.
 - `.github/workflows/release.yml` verifies tag/package/changelog/`origin/main`
-  alignment and reruns `pnpm run validate` before npm publish.
+  alignment and reruns `pnpm run validate` on the maintainer default from
+  `.nvmrc` before npm publish.
 - Documentation contract:
   `pnpm run check:docs`
 - Formatting:

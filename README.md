@@ -110,6 +110,17 @@ pnpm add @koppajs/koppajs-core @koppajs/koppajs-ui5
 pnpm add -D @koppajs/koppajs-vite-plugin
 ```
 
+```bash
+npm install @koppajs/koppajs-core @koppajs/koppajs-ui5
+npm install -D @koppajs/koppajs-vite-plugin
+```
+
+For most users, the fastest way to start from a working KoppaJS setup is still:
+
+```bash
+pnpm create koppajs my-app
+```
+
 The adapter currently supports these official UI5 packages:
 
 - `main` -> `@ui5/webcomponents`
@@ -119,8 +130,12 @@ The adapter currently supports these official UI5 packages:
 
 Local repository requirements:
 
-- Node.js >= 20
+- Node.js >= 22
 - pnpm >= 10.24.0
+
+Maintainer default:
+
+- `.nvmrc` pins Node.js 22 for local release and maintenance workflows
 
 ---
 
@@ -329,10 +344,10 @@ The package is intentionally small so upstream UI5 documentation remains useful 
 
 ## Quality Baseline
 
-- `pnpm run check` is the main local quality gate for docs, formatting, linting, type safety, tests, build output, and publish payload validation.
-- `.github/workflows/ci.yml` mirrors that gate on Node 20 and 22.
+- `pnpm run check` is the main local quality gate for docs, formatting, linting, type safety, test coverage, build output, and publish payload validation.
+- `.github/workflows/ci.yml` runs that gate on Node 22 and 24, then runs browser validation with `pnpm run test:e2e` on the same matrix.
 - `pnpm run validate` adds browser verification through Playwright.
-- `.github/workflows/release.yml` reruns `pnpm run validate` before GitHub release creation and npm publish.
+- `.github/workflows/release.yml` reruns `pnpm run validate` on the maintainer default from `.nvmrc` before GitHub release creation and npm publish.
 
 ---
 
